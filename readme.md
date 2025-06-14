@@ -4,7 +4,7 @@ A stylish animated countdown timer that displays **hours, minutes, and seconds**
 
 Each time unit flips in a satisfying card animation, giving it a retro clock feel.
 
-![preview](./preview.gif)
+![preview](/public/preview.gif)
 
 ## 🔗 Live Demo
 
