@@ -1,0 +1,187 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* user-select: none; */
+}
+
+:root {
+  --text-muted: hsl(237, 18%, 59%);
+  --accent: hsl(345, 95%, 68%);
+
+  --dark-desaturated-blue: hsl(236, 21%, 26%);
+  --bg-main-blue: hsl(235, 16%, 14%);
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-weight: bold;
+  background-color: var(--bg-main-blue);
+  overflow: hidden;
+}
+
+.timer-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.1rem, 3vw, 2rem);
+}
+
+p {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: clamp(0.5rem, 4vw, 1rem);
+  margin-top: 1rem;
+  text-shadow: 0 3px 3px black;
+}
+
+.timer-container > p {
+  position: absolute;
+  left: 50%;
+  top: 120%;
+  transform: translateX(-50%) translateY(-50%);
+  font-size: clamp(1rem, 6vw, 2rem);
+  width: 100%;
+}
+
+.card {
+  position: relative;
+  font-size: clamp(2rem, 12vw, 5rem); /* 80px = 1em */
+  color: var(--accent);
+  position: relative;
+  --_height: 2.25em;
+  height: var(--_height); /* 80px * 2 = 160px */
+  width: 2.2em; /* 80px * 2.5 = 200px */
+  line-height: var(--_height);
+  border-radius: 10px;
+  perspective: 1000px;
+
+  box-shadow: 0 20px 10px -10px black;
+}
+
+.top,
+.bottom,
+.top-front,
+.bottom-front {
+  width: 100%; /* 200px */
+  height: 50%; /* 160px / 2 = 80px */
+
+  text-align: center;
+  overflow: hidden;
+  background-color: var(--dark-desaturated-blue);
+  border-radius: inherit;
+}
+
+.top,
+.top-front {
+  background-color: hsl(238, 21%, 22%);
+}
+
+.bottom,
+.bottom-front {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.top-front,
+.bottom-front {
+  position: absolute;
+}
+
+.top-front {
+  top: 0;
+  transform-origin: bottom;
+}
+
+.bottom-front {
+  bottom: 0;
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+
+.top-front.animate {
+  transform: rotateX(-90deg);
+  transition: transform 0.3s linear;
+}
+
+.bottom-front.animate {
+  transform: rotateX(0deg);
+  transition: transform 280ms linear;
+}
+
+/* |Center circles and center line */
+
+:is(.card, .top, .top-front, .bottom-front)::before,
+:is(.card, .top-front, .bottom-front)::after {
+  content: "";
+  position: absolute;
+  background-color: var(--bg-main-blue);
+  width: 15px;
+  aspect-ratio: 1;
+  border-radius: 50vw;
+  z-index: 2;
+}
+
+.top-front::before,
+.top-front::after {
+  bottom: 0;
+}
+.bottom-front::before,
+.bottom-front::after {
+  top: 0;
+}
+
+.top-front::before,
+.bottom-front::before {
+  left: 0;
+}
+.top-front::after,
+.bottom-front::after {
+  right: 0;
+}
+
+.top-front::before {
+  transform: translateX(-50%) translateY(50%);
+}
+.top-front::after {
+  transform: translateX(50%) translateY(50%);
+}
+.bottom-front::before {
+  transform: translateX(-50%) translateY(-50%);
+}
+.bottom-front::after {
+  transform: translateX(50%) translateY(-50%);
+}
+
+.card::after {
+  top: 50%;
+  left: 0;
+  transform: translateX(-50%) translateY(-50%);
+}
+.top-front::before {
+  bottom: 0;
+  left: 0;
+}
+.card::before {
+  top: 50%;
+  right: 0;
+  transform: translateX(50%) translateY(-50%);
+}
+
+.top::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.395);
+  z-index: 1;
+}
