@@ -1,31 +1,28 @@
+import { populateCardSides, unitCardSides, unitElements } from "./htmlElements"
 import "./style.css"
 import { formatTime, getRemainingTime } from "./utils"
 
-const unitElements = {
-  hours: document.querySelector(".hours")!,
-  minutes: document.querySelector(".minutes")!,
-  seconds: document.querySelector(".seconds")!,
-}
-if (Object.values(unitElements).some((el) => el === null))
-  console.error("Missing DOM elements for countdown")
+let timeout1: number = 0,
+  timeout2: number = 0
 
-type ElementsType = (typeof unitElements)[keyof typeof unitElements]
+populateCardSides()
+window.addEventListener("focus", () => {
+  populateCardSides()
+  clearTimeout(timeout1)
+  clearTimeout(timeout2)
+})
 
-const animateFlip = (element: ElementsType, newValue: number) => {
-  const [top, topFront, bottom, bottomFront] = [
-    "top",
-    "top-front",
-    "bottom",
-    "bottom-front",
-  ].map(
-    (className) =>
-      element.querySelector(`.${className}`) as HTMLDivElement | null
-  )
+const animateFlip = (unit: keyof typeof unitElements, newValue: number) => {
+  const [top, topFront, bottom, bottomFront] = unitCardSides(unit)
 
   if (!top || !topFront || !bottom || !bottomFront) {
     console.error("HTML elements not found for animation")
     return
   }
+
+  const currentValue = parseInt(topFront.textContent!, 10)
+  //? This condition prevents unnecessary animation when window first time loads
+  if (currentValue === newValue || Number.isNaN(currentValue)) return
 
   const formattedNewValue = formatTime(newValue).toString()
 
@@ -36,13 +33,13 @@ const animateFlip = (element: ElementsType, newValue: number) => {
 
   const timeToAnimate = 300
 
-  setTimeout(() => {
+  timeout1 = setTimeout(() => {
     topFront.classList.remove("animate")
     bottomFront.classList.add("animate")
 
     topFront.innerText = formattedNewValue
 
-    setTimeout(() => {
+    timeout2 = setTimeout(() => {
       bottom.innerText = formattedNewValue
     }, timeToAnimate - 20)
   }, timeToAnimate)
@@ -60,7 +57,7 @@ const updateCountdown = () => {
 
   timeUnits.forEach((unit) => {
     if (shouldAnimate(unit, currentTime[unit]))
-      animateFlip(unitElements[unit], currentTime[unit])
+      animateFlip(unit, currentTime[unit])
   })
 
   if (currentTime.remainingTime > 0) {
